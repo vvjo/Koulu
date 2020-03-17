@@ -1,0 +1,26 @@
+title Uuden muistiinpanon lisäys
+
+selain->palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+palvelin-->selain: 302
+note right of selain
+selain saa redirect-pyynnön
+end note
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+palvelin-->selain: HTML-doc
+note right of selain:
+selain saa HTML-koodin
+end note
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+palvelin-->selain: main.css
+note right of selain:
+selain saa stylesheetin
+end note
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+palvelin-->selain: main.js
+note right of selain:
+main.js koodi kutsuu json dataa palvelimelta
+end note
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+palvelin-->selain: data.json
+note right of selain:
+aiemmin luotu tapahtumankäsittelijä suoritetaan ja selain renderöi datan näytölle

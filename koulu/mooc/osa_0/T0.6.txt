@@ -1,0 +1,7 @@
+title SPA post
+
+selain->palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+palvelin-->selain: 201 Created
+note right of selain:
+selain saa viestin, että uusi muitiinpano on luotu. Selaimen päivitystä ei tapahdu
+end note

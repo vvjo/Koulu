@@ -1,0 +1,21 @@
+title SPA lataus
+
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+palvelin-->selain: HTML-doc
+note right of selain:
+selain saa HTML-koodin
+end note
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+palvelin-->selain: main.css
+note right of selain:
+selain saa stylesheetin
+end note
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa.js
+palvelin-->selain: spa.js
+note right of selain:
+spa.js koodi kutsuu json dataa palvelimelta
+end note
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+palvelin-->selain: data.json
+note right of selain:
+aiemmin luotu tapahtumankäsittelijä suoritetaan ja selain renderöi datan näytölle

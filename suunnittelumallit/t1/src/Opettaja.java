@@ -1,4 +1,3 @@
-package t1_factorymethod;
 
 public class Opettaja extends AterioivaOtus {
 

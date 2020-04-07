@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class KSP extends Game {
+public class NumeroPeli extends Game {
 	
 	private Scanner scanner = new Scanner(System. in);
 	private int goal;

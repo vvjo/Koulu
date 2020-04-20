@@ -18,9 +18,6 @@ public class ProxyImage implements Image {
 
 	@Override
 	public void showData() {
-		if(image==null) {
-			image = new RealImage(filename);
-		}
-		image.showData();
+		System.out.println(filename);
 	}
 }

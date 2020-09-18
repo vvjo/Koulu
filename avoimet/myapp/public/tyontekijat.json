@@ -1,0 +1,10 @@
+{
+    "tyontekijat":
+    [
+     {"firstName":"Mauno", "lastName":"Ahonen", "homeNumber":"123123123", "workNumber":"321321321", "address":"Katu 1"},
+     {"firstName":"Matti", "lastName":"Näsä", "homeNumber":"11111111111", "workNumber":null, "address":"Katu 1123"},
+     {"firstName":"Raimo", "lastName":"Vormisto", "homeNumber":null, "workNumber":"44444444", "address":"Katu 1542525"},
+     {"firstName":"Timo", "lastName":"Silakka", "homeNumber":"88888888", "workNumber":"777777777", "address":null}
+    ]
+}
+    

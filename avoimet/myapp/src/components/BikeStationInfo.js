@@ -1,41 +1,47 @@
 import React, { useState, useEffect } from 'react'
-import FormControl from "react-bootstrap/FormControl"
 import Dropdown from "react-bootstrap/Dropdown"
-import Card from "react-bootstrap/Card"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import bikeService from '../services/bikes'
 import weatherService from '../services/weather'
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
+import routeService from '../services/route'
+import FormControl from "react-bootstrap/FormControl"
+import Mappi from './Mappi'
 
-const Mappi = (props) => {
-    console.log(props.weather)
-    console.log(props.weather.weather[0].icon)
+const BikeMenu = (props) => {
+    const list = props.bikes.network.stations.map((a, id) =>
+        <Dropdown.Item
+            key={id}
+            eventKey={id + 1}
+            onSelect={props.handleSelect}>{a.name}
+        </Dropdown.Item>)
     return (
-        <Map center={props.position} zoom={13}>
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-            />
-            <Marker position={props.position}>
-                <Popup>
-                    <Card >
-                        <Card.Img variant="top" src={`http://openweathermap.org/img/wn/${props.weather.weather[0].icon}@2x.png`} />
-                        <Card.Body>
-                            <Card.Title>{props.station.name}</Card.Title>
-                            <Card.Text>
-                            Free bikes: {props.station.free_bikes}
-                            </Card.Text>
-                            <Card.Text>
-                            Empty slots: {props.station.empty_slots}
-                            </Card.Text>
-                            <Card.Text>
-                            Temperature: {Math.round((props.weather.main.temp- 273.15) * 10) / 10} &#8451;
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Popup>
-            </Marker>
-        </Map>
+        <Dropdown>
+            <Dropdown.Toggle >
+                {props.station.name}
+            </Dropdown.Toggle>
+            <Dropdown.Menu as={CustomMenu}>
+                {list}
+            </Dropdown.Menu>
+        </Dropdown>
+    )
+}
+
+const WhereToMenu = (props) => {
+    const list = props.bikes.network.stations.map((a, id) =>
+        <Dropdown.Item
+            key={id}
+            eventKey={id + 1}
+            onSelect={props.handleTo}>{a.name}
+        </Dropdown.Item>)
+    return (
+        <Dropdown>
+            <Dropdown.Toggle >
+                {props.station.name}
+            </Dropdown.Toggle>
+            <Dropdown.Menu as={CustomMenu}>
+                {list}
+            </Dropdown.Menu>
+        </Dropdown>
     )
 }
 
@@ -68,34 +74,36 @@ const CustomMenu = React.forwardRef(
     },
 )
 
-const BikeMenu = (props) => {
-    const list = props.bikes.network.stations.map((a, id) =>
-        <Dropdown.Item
-            key={id}
-            eventKey={id + 1}
-            onSelect={props.handleSelect}>{a.name}
-        </Dropdown.Item>)
-    return (
-        <Dropdown>
-            <Dropdown.Toggle >
-                Citybike stations
-            </Dropdown.Toggle>
-            <Dropdown.Menu as={CustomMenu}>
-                {list}
-            </Dropdown.Menu>
-        </Dropdown>
-    )
-}
-
 const BikeStationInfo = () => {
     const [bikes, setBikes] = useState({ network: { stations: [] } })
-    const [position, setPosition] = useState([60.22408646778726, 25.075395792228694])
-    const [station, setStation] = useState({latitude: 60.22408646778726, longitude: 25.075395792228694})
-    const [weather, setWeather] = useState({main: {temp: 275}, weather: [{icon: "10d"}]})
+    const [endStation, setEndStation] = useState({ latitude: 60.22408646778726, longitude: 25.075395792228694, name: "Where to" })
+    const [station, setStation] = useState({ latitude: 60.22408646778726, longitude: 25.075395792228694, name: "From where" })
+    const [weather, setWeather] = useState({ main: { temp: 275 }, weather: [{ icon: "10d", description: "" }] })
+    const [route, setRoute] = useState({ bbox: [0, 0] })
+    const [routeCoords, setRouteCoords] = useState([{ start: [25.075395792228694, 60.22408646778726], end: [25.031385306773423, 60.18795810306132] }])
+    const [routing, setRouting] = useState(true)
 
     const handleSelect = (event) => {
         setStation(bikes.network.stations[event - 1])
-        setPosition([bikes.network.stations[event - 1].latitude, bikes.network.stations[event - 1].longitude])
+        let routeState = {...routeCoords, start:[bikes.network.stations[event - 1].longitude, bikes.network.stations[event - 1].latitude] }
+        setRouteCoords(routeState)
+        //console.log(routeState)
+    }
+
+    const handleTo = (event) => {
+        //console.log({ end: [bikes.network.stations[event - 1].longitude, bikes.network.stations[event - 1].latitude] })
+        setEndStation(bikes.network.stations[event - 1])
+        let routeState = {...routeCoords, end:[bikes.network.stations[event - 1].longitude, bikes.network.stations[event - 1].latitude] }
+        //console.log(routeState)
+        setRouteCoords(routeState)
+        routeService
+            .getGeo(routeState)
+            .then(response => {
+                setRoute(response)
+            })
+            .then(() => {
+                setRouting(false)
+            })
     }
 
     useEffect(() => {
@@ -116,8 +124,9 @@ const BikeStationInfo = () => {
 
     return (
         <div>
-            <BikeMenu bikes={bikes} handleSelect={handleSelect} />
-            <Mappi position={position} station={station} weather={weather}/>
+            <BikeMenu bikes={bikes} station={station} handleSelect={handleSelect} />
+            <WhereToMenu bikes={bikes} station={endStation} handleTo={handleTo} />
+            <Mappi routing={routing} station={station} weather={weather} route={route} />
         </div>
     )
 }

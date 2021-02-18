@@ -1,0 +1,2 @@
+C:\Users\hp\source\repos\Matkakortti\x64\Debug\Matkakortti.exe
+C:\Users\hp\source\repos\Matkakortti\x64\Debug\Matkakortti.pdb
